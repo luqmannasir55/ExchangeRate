@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exchange Rates</title>
+
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .header {
+            background: black;
+            color: white;
+            padding: 10px;
+            font-size: 20px;
+            text-align: left;
+            padding-left: 20px;
+        }
+        .date-picker {
+            margin: 20px;
+            font-size: 18px;
+        }
+        .rates-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            max-width: 800px;
+            margin: auto;
+        }
+        .rate-box {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            background: #f8f8f8;
+            font-size: 18px;
+        }
+        .rate-box strong {
+            display: block;
+            font-size: 22px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">Exchange Rate</div>
+    <h2>Rates as of <span id="selected-date"><?php echo date('d-m-Y'); ?></span></h2>
+
+    <div class="date-picker">
+        <input type="date" id="dateInput" value="<?php echo date('Y-m-d'); ?>">
+    </div>
+
+    <div class="rates-container" id="rates-container">
+        <!-- Exchange rates will be added dynamically here -->
+    </div>
+
+    <script>
+        jQuery(document).ready(function () {
+
+            getRates(jQuery("#dateInput").val());
+
+            // Update date display when user changes date
+            jQuery("#dateInput").on("change", function () {
+
+                let inputDate = new Date(jQuery(this).val());
+                let formattedDate = inputDate.toLocaleDateString("en-GB"); // Format as DD-MM-YYYY
+                jQuery("#selected-date").text(formattedDate);
+
+                getRates(jQuery(this).val());
+
+            });
+
+        });
+
+        function getRates(sDate) {
+            
+            if (sDate !== null && sDate !== undefined && sDate !== "") {
+
+                jQuery("#rates-container").empty();
+
+                jQuery.ajax({
+                    url: "http://localhost/exchangeRate.php", // Your backend PHP script
+                    type: "POST",
+                    data: { 'sDate': sDate, 'sAction':'getRates' }, // Send selected date to PHP
+                    dataType: "json",
+                    success: function (response) {
+                        //console.log(response);
+                        if (response.sResult == 'success') {
+                            let arrRates = response.arrRates;
+
+                            if (arrRates.length > 0)
+                                updateRates(arrRates); // Function to update UI
+                            else {
+                                alert('No exchange rate info on this date');
+                            }
+
+                        } else {
+                            alert("Error fetching rates");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        //console.error("AJAX Error:", status, error);
+                        //console.log("Server Response:", xhr.responseText);
+                        alert("AJAX request failed: " + xhr.responseText);
+                    }
+                });
+
+            }
+            
+        }
+
+        function updateRates(arrRates) {
+
+            //jQuery("#rates-container").empty();
+
+            jQuery.each(arrRates, function (index, item) {
+                jQuery("#rates-container").append(`
+                    <div class="rate-box">
+                        `+item.currency+`
+                        <strong>`+item.rate+`</strong>
+                    </div>
+                `);
+            });
+                
+        }
+
+    </script>
+</body>
+</html>

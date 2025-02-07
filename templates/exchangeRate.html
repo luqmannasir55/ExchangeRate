@@ -9,55 +9,125 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
+        /* Global Styles */
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 20px;
+            background: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
+
+        /* Header */
         .header {
-            background: black;
+            width: 100%;
+            background: #222;
             color: white;
-            padding: 10px;
-            font-size: 20px;
-            text-align: left;
-            padding-left: 20px;
-        }
-        .date-picker {
-            margin: 20px;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
             font-size: 18px;
         }
-        .rates-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            max-width: 800px;
-            margin: auto;
+
+        /* Date Selection */
+        .date-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 600px;
         }
-        .rate-box {
+
+        .date-container h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .date-container input {
+            padding: 8px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            padding: 15px;
-            background: #f8f8f8;
-            font-size: 18px;
+            font-size: 16px;
         }
-        .rate-box strong {
-            display: block;
-            font-size: 22px;
-            margin-top: 5px;
+
+        /* Exchange Rate Grid */
+        .rates-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        /* Rate Card */
+        .rate-card {
+            width: 120px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden; /* Ensures rounded corners apply properly */
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        /* Currency Section */
+        .currency {
+            background: #f1f1f1; /* Light gray background */
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Divider Line */
+        .divider {
+            height: 1px;
+            background: #ddd;
+            width: 100%;
+        }
+
+        /* Exchange Rate Section */
+        .rate {
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .rates-container {
+                justify-content: center;
+            }
+
+            .rate-card {
+                width: 100px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="header">Exchange Rate</div>
-    <h2>Rates as of <span id="selected-date"><?php echo date('d-m-Y'); ?></span></h2>
+    
+    <!-- Header -->
+    <div class="header">Exchange Rates</div>
 
-    <div class="date-picker">
+    <!-- Date Selector -->
+    <div class="date-container">
+    <h2>Rates as of <span id="selected-date"><?php echo date('d-m-Y'); ?></span></h2>
         <input type="date" id="dateInput" value="<?php echo date('Y-m-d'); ?>">
     </div>
 
-    <div class="rates-container" id="rates-container">
-        <!-- Exchange rates will be added dynamically here -->
+    <!-- Exchange Rate Grid -->
+    <div class="rates-container">
     </div>
 
     <script>
@@ -82,7 +152,7 @@
             
             if (sDate !== null && sDate !== undefined && sDate !== "") {
 
-                jQuery("#rates-container").empty();
+                jQuery(".rates-container").empty();
 
                 jQuery.ajax({
                     url: "http://localhost/exchangeRate.php", // Your backend PHP script
@@ -117,13 +187,13 @@
 
         function updateRates(arrRates) {
 
-            //jQuery("#rates-container").empty();
+            //jQuery(".rates-container").empty();
 
             jQuery.each(arrRates, function (index, item) {
-                jQuery("#rates-container").append(`
-                    <div class="rate-box">
-                        `+item.currency+`
-                        <strong>`+item.rate+`</strong>
+                jQuery(".rates-container").append(`
+                    <div class='rate-card'>
+                        <div class='currency'>`+item.currency+`</div>
+                        <div class='rate'>`+item.rate+`</div>
                     </div>
                 `);
             });

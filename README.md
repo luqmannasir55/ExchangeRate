@@ -2,6 +2,13 @@
 
 Exchange Rate Web Application
 
+Tech Stack  
+- PHP
+- MySQL
+- jQuery
+- HTML
+- CSS
+
 ![image](https://github.com/user-attachments/assets/1886f63b-e6fe-48b6-8910-2c33590a090c)
 
 Installation Guide

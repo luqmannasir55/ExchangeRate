@@ -2,6 +2,9 @@
 
 Exchange Rate Web Application
 
+![image](https://github.com/user-attachments/assets/1886f63b-e6fe-48b6-8910-2c33590a090c)
+
+Installation Guide
 1. Download and install XAMPP on your local PC.
 2. After successfully installing XAMPP, run the XAMPP Control Panel and start the Apache and MySQL service.
 3. Go to http://localhost/phpmyadmin and create a database named 'exchange_rates'.

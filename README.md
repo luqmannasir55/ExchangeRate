@@ -1,4 +1,4 @@
-# URegExchangeRate
+# ExchangeRate
 
 Exchange Rate Web Application
 
